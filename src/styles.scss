@@ -1,1 +1,49 @@
 /* You can add global styles to this file, and also import other style files */
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.card-view {
+    display: flex;
+    width: 100%;
+    height: calc(100% - 116px);
+    overflow: auto;
+    flex-wrap: wrap;
+
+    mat-card {
+        cursor: pointer;
+        padding: 0;
+        margin: 1rem;
+        max-height: 340px;
+    }
+
+    .image-view {
+        height: calc(100% - 36px);
+        min-width: 300px;;
+    }
+
+    .card-button {
+        button {
+            width: 100%;
+        }
+    }
+}
+
+.no-location {
+    height: calc(100% - 64px);
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    display: flex;text-align: center;
+}
+
+.breadcrumb-view {
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    .home {
+        cursor: pointer;
+    }
+}
+
+.location-menu {
+    margin-left: 2rem !important;
+}
