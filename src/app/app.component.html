@@ -1,18 +1,5 @@
-<mat-toolbar color="primary">
-  <span>RENTAL MANAGEMENT SYSTEM</span>
-  <button class="location-menu" mat-button [matMenuTriggerFor]="main_menu">Select Location</button>
-
-  <mat-menu #main_menu="matMenu">
-    <ng-container *ngFor="let location of locations">
-      <button mat-menu-item [matMenuTriggerFor]="sub_menu"
-        (click)="showLocationCatagories(location)">{{ location.name }}</button>
-      <mat-menu #sub_menu="matMenu">
-        <button *ngFor="let branch of location.branches" mat-menu-item
-          (click)="showBranchCatagories(branch)">{{ branch.name }}</button>
-      </mat-menu>
-    </ng-container>
-  </mat-menu>
-</mat-toolbar>
+<app-toolbar (showLocationCatagories)="showLocationCatagories($event)"
+  (showBranchCatagories)="showBranchCatagories($event)" [locations]="locations"></app-toolbar>
 
 <ng-template #locationSelected>
   <div class="breadcrumb-view">
@@ -21,31 +8,13 @@
   </div>
   <div class="card-view">
     <mat-card @fadeInOut *ngFor="let category of categories" (click)="showSubCategories(category)">
-      <div class="image-view">
-        <img [src]="'../assets/category/'+category.image">
-      </div>
-      <div class="card-button">
-        <button mat-flat-button color="primary">{{category.name}}
-          <span class="material-icons" *ngIf="category.subcategories">
-            arrow_right
-          </span>
-        </button>
-      </div>
+      <app-catalog-card [category]="category"></app-catalog-card>
     </mat-card>
   </div>
 </ng-template>
 
 <ng-template #noLocationSelected>
-  <div class="no-location">
-    <div>
-      <h2>
-        WELCOME TO RENTAL MANAGEMENT SYSTEM
-      </h2>
-      <span>
-        Please select location
-      </span>
-    </div>
-  </div>
+  <app-welcome></app-welcome>
 </ng-template>
 
 <div *ngIf="categories; then locationSelected else noLocationSelected"></div>

@@ -1,0 +1,10 @@
+<div class="image-view">
+    <img [src]="'../assets/category/'+category.image">
+</div>
+<div class="card-button">
+    <button mat-flat-button color="primary">{{category.name}}
+        <span class="material-icons" *ngIf="category.subcategories">
+            arrow_right
+        </span>
+    </button>
+</div>

@@ -1,0 +1,15 @@
+<mat-toolbar color="primary">
+    <span>RENTAL MANAGEMENT SYSTEM</span>
+    <button class="location-menu" mat-button [matMenuTriggerFor]="main_menu">Select Location</button>
+
+    <mat-menu #main_menu="matMenu">
+        <ng-container *ngFor="let location of locations">
+            <button mat-menu-item [matMenuTriggerFor]="sub_menu"
+                (click)="showLocation(location)">{{ location.name }}</button>
+            <mat-menu #sub_menu="matMenu">
+                <button *ngFor="let branch of location.branches" mat-menu-item
+                    (click)="showBranchCatagories.emit(branch)">{{ branch.name }}</button>
+            </mat-menu>
+        </ng-container>
+    </mat-menu>
+</mat-toolbar>

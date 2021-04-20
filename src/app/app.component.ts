@@ -1,8 +1,7 @@
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatMenuTrigger } from '@angular/material/menu';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { CatalogBranch, CatalogCategory, CatalogLocation, CatalogResponse } from './entities/catatog';
+import { CatalogBranch, CatalogCategory, CatalogLocation, CatalogResponse } from './entities/catalog';
 import { CatalogService } from './services/catalog.service';
 
 @Component({
@@ -21,16 +20,22 @@ import { CatalogService } from './services/catalog.service';
 export class AppComponent implements OnInit, OnDestroy {
   locations: CatalogLocation[];
   categories: CatalogCategory[];
+  getCatalogJSONSubscription: Subscription;
   breadcrumbData = {
     home: null,
     category: null
   };
-  getCatalogJSONSubscription: Subscription;
-  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
 
-  constructor(private catalogService: CatalogService) { }
+  constructor(
+    private catalogService: CatalogService
+  ) { }
 
   ngOnInit() {
+    this.subscribe();
+  }
+
+  /** This method is to subscribe the observable to get catalog json from a json file */
+  subscribe() {
     this.getCatalogJSONSubscription = this.catalogService.getCatalogJSON().subscribe((result: CatalogResponse) => {
       if (result.data) {
         this.locations = [...result.data.locations];
@@ -38,21 +43,22 @@ export class AppComponent implements OnInit, OnDestroy {
     })
   }
 
+  /** If a location is selected then this method will show all the categories of selected location  */
   showLocationCatagories(location: CatalogLocation) {
-    this.trigger.closeMenu();
-    let categories = [];
+    this.categories = [];
     location.branches.forEach(branch => {
-      categories = [...categories, ...branch.categories]
+      this.categories = [...this.categories, ...branch.categories]
     })
-    this.categories = [...categories];
     this.resetBreadcrumb();
   }
 
+  /** If a branch is selected then this method will show all the categories of selected branch */
   showBranchCatagories(branch: CatalogBranch) {
     this.categories = [...branch.categories];
     this.resetBreadcrumb();
   }
 
+  /** If a category is selected then this method will show all the subcategory of selected category */
   showSubCategories(category: CatalogCategory) {
     if (category.subcategories) {
       this.breadcrumbData.category = category;
@@ -60,16 +66,19 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** This method is to reset breadcrumb state */
   resetBreadcrumb() {
-    this.breadcrumbData.home = this.categories;
+    this.breadcrumbData.home = [...this.categories];
     this.breadcrumbData.category = null;
   }
 
+  /** This method is to go back to home */
   home() {
-    this.categories = this.breadcrumbData.home;
+    this.categories = [...this.breadcrumbData.home];
     this.breadcrumbData.category = null;
   }
 
+  /** This method will unsubscribe the subscribed observable on destroy */
   ngOnDestroy() {
     this.getCatalogJSONSubscription.unsubscribe();
   }
